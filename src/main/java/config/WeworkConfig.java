@@ -1,29 +1,46 @@
 package config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+
+import java.io.IOException;
+
 public class WeworkConfig {
 
-//    public String agentId = "1000005";
-//    public String secret = "1JPyY9GvPLZfpvxEDjok-Xt_9v7HIBYJhZUoO6EgNGY";
-//    public String corpid = "wwd6da61649bd66fea";
-//    public String contactSecret="C7uGOrNyxWWzwBsUyWEbLQdOqoWPz4hNvxj9RIFv-4U";
+    public String agentId;
+    public String secret;
+    public String corpid;
+    public String contactSecret;
 
-    public String agentId = "1000002";
-    public String secret = "KBrXPg7aKsvkLghfA4sHYgUVHfbXXIrPdwvzpfSnM7A";
-    public String corpid = "ww262a519c6c958fa1";
-    public String contactSecret="g4CGCLXvjvDCe5r4rNXrI1MP5OfRayw8zVglcSXfoJQ";
+//    public String agentId = "1000002";
+//    public String secret = "KBrXPg7aKsvkLghfA4sHYgUVHfbXXIrPdwvzpfSnM7A";
+//    public String corpid = "ww262a519c6c958fa1";
+//    public String contactSecret="g4CGCLXvjvDCe5r4rNXrI1MP5OfRayw8zVglcSXfoJQ";
 
 
 
     private static WeworkConfig weworkConfig;
     public static WeworkConfig getInstance(){
         if (weworkConfig == null){
-            weworkConfig = new WeworkConfig();
+            weworkConfig=load("/conf/WeworkConfig.yaml");
+            System.out.println(weworkConfig);
+            System.out.println(weworkConfig.agentId);
         }
         return weworkConfig;
     }
 
-    public static void load(String path){
+    public static WeworkConfig load(String path){
         //todo: read from yaml or json
+
+        ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+        try {
+            return mapper.readValue(WeworkConfig.class.getResourceAsStream(path), WeworkConfig.class);
+            //System.out.println(mapper.writeValueAsString(WeworkConfig.getInstance()));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
 
